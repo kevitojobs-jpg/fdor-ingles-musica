@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprende Inglés con Música – FDOR</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1a2744; --navy-dark:#0f1a30; --blue:#1565C0; --sky:#2196F3;
+  --sky-light:#E3F2FD; --yellow:#FFC107; --yellow-light:#FFF8E1;
+  --green:#2E7D32; --green-light:#4CAF50; --green-pale:#E8F5E9;
+  --surface:#f1f5f9; --card:#fff; --border:#e2e8f0; --muted:#64748b;
+  --text:#1e293b; --danger:#c62828; --danger-pale:#FFEBEE;
+  --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08); --shadow-md:0 4px 12px rgba(0,0,0,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;}
+input{font-family:inherit;}
+
+/* SCREENS */
+#app{max-width:480px;margin:0 auto;position:relative;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+/* LOGIN */
+#screen-login{
+  background:linear-gradient(160deg,var(--navy-dark) 0%,var(--navy) 50%,#1e3a6e 100%);
+  align-items:center;justify-content:center;padding:2rem 1.5rem;text-align:center;
+}
+.login-mascot{font-size:72px;margin-bottom:1rem;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.login-badge{background:var(--yellow);color:var(--navy);font-size:12px;font-weight:700;
+  letter-spacing:.08em;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:1rem;}
+.login-title{color:#fff;font-size:26px;font-weight:700;line-height:1.2;margin-bottom:.5rem;}
+.login-title span{color:var(--yellow);}
+.login-sub{color:rgba(255,255,255,.55);font-size:14px;margin-bottom:2rem;line-height:1.6;}
+.login-form{width:100%;max-width:320px;margin:0 auto;}
+.login-input{
+  width:100%;padding:13px 16px;border:1.5px solid rgba(255,255,255,.2);
+  border-radius:var(--radius-md);background:rgba(255,255,255,.08);
+  color:#fff;font-size:15px;outline:none;margin-bottom:10px;
+  transition:border-color .2s;
+}
+.login-input::placeholder{color:rgba(255,255,255,.35);}
+.login-input:focus{border-color:var(--yellow);}
+.btn-start{
+  width:100%;padding:14px;background:var(--yellow);color:var(--navy);
+  border:none;border-radius:var(--radius-md);font-size:16px;font-weight:700;
+  transition:opacity .15s,transform .15s;
+}
+.btn-start:hover{opacity:.9;transform:translateY(-1px);}
+.login-footer{color:rgba(255,255,255,.3);font-size:11px;margin-top:1.5rem;line-height:1.6;}
+
+/* HEADER */
+.app-header{
+  background:var(--navy);padding:.85rem 1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.header-left{display:flex;align-items:center;gap:10px;}
+.logo-badge{background:var(--yellow);color:var(--navy);font-size:12px;font-weight:700;padding:4px 9px;border-radius:6px;letter-spacing:.05em;}
+.header-title{color:#fff;font-size:14px;font-weight:500;}
+.header-title span{color:var(--yellow);}
+.header-right{display:flex;align-items:center;gap:8px;}
+.level-chip{background:rgba(255,193,7,.15);border:1px solid var(--yellow);border-radius:99px;padding:3px 10px;color:var(--yellow);font-size:12px;font-weight:500;}
+.avatar-btn{width:32px;height:32px;border-radius:50%;background:var(--sky);border:2px solid rgba(255,255,255,.25);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+
+/* BOTTOM NAV */
+.bottom-nav{background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 0 12px;position:sticky;bottom:0;z-index:100;}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;padding:4px 12px;color:var(--muted);font-size:10px;transition:color .15s;}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.nav-btn.active{color:var(--blue);}
+
+.scroll-area{flex:1;overflow-y:auto;padding-bottom:1rem;}
+
+/* HERO */
+.hero-banner{
+  background:linear-gradient(135deg,var(--navy) 0%,#1e3a6e 60%,var(--blue) 100%);
+  padding:1.25rem;display:flex;align-items:center;gap:1rem;
+}
+.hero-mascot{width:80px;height:80px;flex-shrink:0;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,193,7,.35);display:flex;align-items:center;justify-content:center;font-size:44px;}
+.hero-text{flex:1;}
+.hero-greeting{color:rgba(255,255,255,.6);font-size:12px;margin-bottom:4px;}
+.hero-name{color:#fff;font-size:18px;font-weight:700;margin-bottom:10px;}
+.hero-name span{color:var(--yellow);}
+.hero-stats{display:flex;gap:16px;}
+.stat{text-align:center;}
+.stat-num{color:var(--yellow);font-size:20px;font-weight:700;}
+.stat-lbl{color:rgba(255,255,255,.45);font-size:10px;}
+
+/* PROGRESS */
+.progress-bar-wrap{padding:1rem 1.25rem .5rem;}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:6px;}
+.progress-labels span{font-size:12px;color:var(--muted);}
+.progress-labels strong{font-size:12px;color:var(--blue);}
+.prog-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--yellow));transition:width .6s ease;}
+
+/* SECTIONS */
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1.25rem .5rem;}
+.section-title{font-size:14px;font-weight:600;color:var(--text);}
+.section-link{font-size:12px;color:var(--sky);background:none;border:none;}
+
+/* MÓDULOS */
+.modules-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 1.25rem;}
+.mod-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 10px;text-align:center;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.mod-card:hover{border-color:var(--sky);box-shadow:var(--shadow-sm);}
+.mod-icon{width:44px;height:44px;border-radius:10px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.mod-blue{background:var(--sky-light);}
+.mod-green{background:var(--green-pale);}
+.mod-yellow{background:var(--yellow-light);}
+.mod-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.mod-desc{font-size:10px;color:var(--muted);line-height:1.4;}
+
+/* CANCIONES SCROLL HOME */
+.songs-scroll{display:flex;gap:10px;padding:0 1.25rem;overflow-x:auto;padding-bottom:4px;}
+.songs-scroll::-webkit-scrollbar{display:none;}
+.song-mini-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;min-width:140px;cursor:pointer;transition:border-color .2s;flex-shrink:0;}
+.song-mini-card:hover{border-color:var(--sky);}
+.song-mini-card.featured{border-color:var(--yellow);border-width:1.5px;}
+.song-thumb-mini{width:100%;aspect-ratio:16/9;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:28px;position:relative;}
+.song-mini-title{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.song-mini-artist{font-size:11px;color:var(--muted);}
+.mini-badge{position:absolute;top:5px;right:5px;background:var(--yellow);color:var(--navy);font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;}
+
+/* GRID CANCIONES */
+.songs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:1rem 1.25rem;}
+.song-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.song-card:hover{border-color:var(--sky);box-shadow:var(--shadow-sm);}
+.song-card.featured{border-color:var(--yellow);border-width:1.5px;}
+.song-thumb{width:100%;aspect-ratio:16/9;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:32px;position:relative;overflow:hidden;}
+.play-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.song-card:hover .play-overlay{background:rgba(0,0,0,.25);}
+.play-circle{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.song-card:hover .play-circle{opacity:1;}
+.play-circle svg{width:16px;height:16px;fill:var(--navy);}
+.song-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+.song-artist-name{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.song-meta-row{display:flex;justify-content:space-between;align-items:center;}
+.lvl-pill{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;}
+.lvl-basic{background:var(--sky-light);color:var(--blue);}
+.lvl-mid{background:var(--green-pale);color:var(--green);}
+.lvl-adv{background:var(--yellow-light);color:#E65100;}
+.song-stars{color:var(--yellow);font-size:11px;}
+
+/* SEARCH */
+.search-bar{padding:1rem 1.25rem .25rem;}
+.search-input-wrap{position:relative;}
+.search-input-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;}
+.search-input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--card);color:var(--text);outline:none;transition:border-color .2s;}
+.search-input:focus{border-color:var(--sky);}
+
+/* PLAYER */
+#screen-player{background:var(--surface);}
+.player-back-bar{background:var(--navy);padding:.75rem 1.25rem;display:flex;align-items:center;gap:12px;}
+.back-btn{background:none;border:none;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:6px;font-size:13px;}
+.back-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;}
+.player-song-title{color:#fff;font-size:14px;font-weight:600;}
+.player-song-artist{color:rgba(255,255,255,.5);font-size:12px;}
+.yt-container{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.yt-container iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.module-tabs{display:flex;background:var(--navy-dark);}
+.mod-tab{flex:1;padding:10px 8px;text-align:center;background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;font-weight:500;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.mod-tab.active{color:var(--yellow);border-bottom-color:var(--yellow);}
+.lyrics-panel{background:var(--navy-dark);padding:.75rem 1rem;max-height:200px;overflow-y:auto;}
+.lyric-line{font-size:14px;color:rgba(255,255,255,.3);padding:5px 8px;border-radius:6px;line-height:1.7;transition:color .2s,background .2s;margin-bottom:2px;}
+.lyric-line.active{color:#fff;background:rgba(255,255,255,.07);}
+.lyric-blank{display:inline-block;background:rgba(255,193,7,.1);border:1px dashed rgba(255,193,7,.5);border-radius:4px;padding:0 8px;min-width:50px;height:21px;vertical-align:middle;margin:0 2px;}
+.score-bar{background:var(--navy);padding:.5rem 1.25rem;display:flex;align-items:center;gap:16px;}
+.score-item{display:flex;align-items:center;gap:6px;}
+.score-item svg{width:16px;height:16px;stroke:var(--yellow);fill:none;stroke-width:2;}
+.score-val{color:var(--yellow);font-size:14px;font-weight:700;}
+.score-lbl{color:rgba(255,255,255,.45);font-size:11px;}
+.streak-badge{margin-left:auto;background:rgba(255,193,7,.15);border:1px solid var(--yellow);border-radius:99px;padding:3px 10px;color:var(--yellow);font-size:12px;font-weight:600;}
+.feedback-toast{margin:0 1rem .5rem;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;}
+.feedback-toast.ok{background:var(--green-pale);color:var(--green);border:1px solid #A5D6A7;display:flex;}
+.feedback-toast.err{background:var(--danger-pale);color:var(--danger);border:1px solid #EF9A9A;display:flex;}
+.options-panel{padding:.75rem 1rem;background:var(--surface);}
+.options-prompt{font-size:13px;color:var(--muted);margin-bottom:8px;text-align:center;font-weight:500;}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.opt-btn{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;font-weight:500;color:var(--text);text-align:left;transition:all .15s;}
+.opt-btn:hover:not(:disabled){border-color:var(--sky);background:var(--sky-light);}
+.opt-btn.correct{background:var(--green-pale);border-color:var(--green);color:var(--green);}
+.opt-btn.wrong{background:var(--danger-pale);border-color:var(--danger);color:var(--danger);}
+.opt-btn:disabled{cursor:default;}
+.player-controls-bar{background:var(--navy-dark);padding:.75rem 1rem 1rem;border-top:1px solid rgba(255,255,255,.06);}
+.time-track{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.time-label{color:rgba(255,255,255,.4);font-size:11px;min-width:32px;}
+.track-bar{flex:1;height:4px;background:rgba(255,255,255,.12);border-radius:99px;cursor:pointer;position:relative;}
+.track-fill{height:100%;background:var(--yellow);border-radius:99px;transition:width .4s linear;}
+.ctrl-buttons{display:flex;align-items:center;justify-content:center;gap:20px;}
+.ctrl-btn{background:none;border:none;color:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;transition:color .15s;}
+.ctrl-btn:hover{color:rgba(255,255,255,.9);}
+.ctrl-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.ctrl-btn.main{color:#fff;}
+.ctrl-btn.main svg{width:28px;height:28px;}
+.ctrl-btn.repeat-on{color:var(--yellow);}
+
+/* OVERLAYS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(10,20,40,.93);z-index:200;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;}
+.overlay.show{display:flex;}
+.ov-emoji{font-size:64px;margin-bottom:1rem;}
+.ov-title{color:#fff;font-size:22px;font-weight:700;margin-bottom:.5rem;}
+.ov-sub{color:rgba(255,255,255,.55);font-size:14px;margin-bottom:1.5rem;}
+.ov-stats{display:flex;gap:24px;margin-bottom:2rem;}
+.ov-stat .num{color:var(--yellow);font-size:28px;font-weight:700;}
+.ov-stat .lbl{color:rgba(255,255,255,.5);font-size:12px;}
+.ov-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px;}
+.btn-primary{background:var(--yellow);color:var(--navy);border:none;border-radius:var(--radius-md);padding:13px 24px;font-size:15px;font-weight:700;width:100%;transition:opacity .15s;}
+.btn-primary:hover{opacity:.9;}
+.btn-secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);padding:13px 24px;font-size:14px;font-weight:500;width:100%;transition:background .15s;}
+.btn-secondary:hover{background:rgba(255,255,255,.18);}
+.levelup-stars{font-size:52px;margin-bottom:1rem;animation:popIn .6s ease;}
+@keyframes popIn{from{transform:scale(.3) rotate(-20deg);opacity:0;}to{transform:scale(1) rotate(0deg);opacity:1;}}
+.levelup-title{color:var(--yellow);font-size:28px;font-weight:800;margin-bottom:.5rem;}
+
+/* DICCIONARIO */
+.word-list{padding:0 1.25rem;display:flex;flex-direction:column;gap:8px;}
+.word-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;}
+.word-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.word-en{font-size:16px;font-weight:700;color:var(--navy);}
+.word-es{font-size:13px;color:var(--muted);}
+.word-def{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:4px;}
+.word-phrase{font-size:12px;font-style:italic;color:var(--text);border-left:2px solid var(--yellow);padding-left:8px;}
+.dict-empty{text-align:center;padding:3rem 1.25rem;color:var(--muted);font-size:14px;line-height:1.8;}
+.dict-count-chip{background:var(--green-pale);color:var(--green);font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;}
+
+/* PROGRESO */
+.progress-screen{padding:1rem 1.25rem;}
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;margin-bottom:1rem;}
+.prog-card-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.06em;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mini-stat{text-align:center;padding:.75rem;background:var(--surface);border-radius:var(--radius-sm);}
+.mini-stat .num{font-size:22px;font-weight:700;color:var(--navy);}
+.mini-stat .lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.ring-wrap{position:relative;width:110px;height:110px;margin:0 auto 1rem;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:10;}
+.ring-fill{fill:none;stroke:var(--blue);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+.ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-level{font-size:30px;font-weight:800;color:var(--navy);}
+.ring-lbl{font-size:11px;color:var(--muted);}
+
+/* PERFIL */
+.profile-header{background:linear-gradient(135deg,var(--navy-dark),var(--navy));padding:2rem 1.25rem 1.5rem;text-align:center;}
+.profile-avatar-big{width:72px;height:72px;border-radius:50%;background:var(--sky);border:3px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#fff;margin:0 auto 12px;}
+.profile-name-big{color:#fff;font-size:18px;font-weight:700;margin-bottom:4px;}
+.profile-sub{color:rgba(255,255,255,.45);font-size:13px;}
+.profile-menu{padding:1rem 1.25rem;display:flex;flex-direction:column;gap:8px;}
+.menu-item{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s;}
+.menu-item:hover{border-color:var(--sky);}
+.menu-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.menu-text{flex:1;}
+.menu-label{font-size:14px;font-weight:500;color:var(--text);}
+.menu-sub{font-size:12px;color:var(--muted);}
+.menu-item.danger .menu-label{color:var(--danger);}
+.menu-arr svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:500;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+/* LOADING */
+#screen-loading{background:var(--navy-dark);align-items:center;justify-content:center;gap:1rem;}
+.loading-logo{font-size:60px;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.loading-text{color:rgba(255,255,255,.5);font-size:14px;}
+
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="screen-loading" class="screen active">
+  <div class="loading-logo">🦫</div>
+  <div class="loading-text">Cargando…</div>
+</div>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen">
+  <div class="login-mascot">🦫</div>
+  <div class="login-badge">FDOR · Educación y Desarrollo Social</div>
+  <h1 class="login-title">Aprende inglés<br><span>con música</span></h1>
+  <p class="login-sub">Practica tu comprensión auditiva con canciones reales.<br>Tu progreso se guarda automáticamente.</p>
+  <div class="login-form">
+    <input class="login-input" id="login-name" type="text" placeholder="¿Cómo te llamas?" maxlength="30" autocomplete="off">
+    <button class="btn-start" onclick="startApp()">🎵 Comenzar a aprender</button>
+  </div>
+  <p class="login-footer">No necesitas cuenta ni contraseña.<br>Fundación Daniel Ospina Rojas © 2025</p>
+</div>
+
+<!-- APP -->
+<div id="screen-app" class="screen">
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">FDOR</div>
+      <div class="header-title">Inglés con <span>música</span></div>
+    </div>
+    <div class="header-right">
+      <div class="level-chip" id="header-level">Nivel 1</div>
+      <button class="avatar-btn" id="header-avatar" onclick="goToTab('profile')"></button>
+    </div>
+  </header>
+
+  <div class="scroll-area" id="main-scroll">
+
+    <!-- HOME -->
+    <div id="tab-home">
+      <div class="hero-banner">
+        <div class="hero-mascot">🦫</div>
+        <div class="hero-text">
+          <div class="hero-greeting">¡Hola de nuevo!</div>
+          <div class="hero-name" id="home-name">Bienvenido <span>👋</span></div>
+          <div class="hero-stats">
+            <div class="stat"><div class="stat-num" id="home-points">0</div><div class="stat-lbl">puntos</div></div>
+            <div class="stat"><div class="stat-num" id="home-songs">0</div><div class="stat-lbl">canciones</div></div>
+            <div class="stat"><div class="stat-num" id="home-streak">0🔥</div><div class="stat-lbl">mejor racha</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-labels">
+          <span id="prog-label">Progreso al siguiente nivel</span>
+          <strong id="prog-value">0/7</strong>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="section-header"><div class="section-title">Módulos de práctica</div></div>
+      <div class="modules-row">
+        <div class="mod-card" onclick="goToTab('songs')">
+          <div class="mod-icon mod-blue">🧩</div>
+          <div class="mod-name">Completar</div>
+          <div class="mod-desc">Llena los espacios</div>
+        </div>
+        <div class="mod-card" onclick="goToTab('songs');pendingModule='listen'">
+          <div class="mod-icon mod-green">👂</div>
+          <div class="mod-name">Escucha</div>
+          <div class="mod-desc">Comprensión auditiva</div>
+        </div>
+        <div class="mod-card" onclick="goToTab('dictionary')">
+          <div class="mod-icon mod-yellow">📖</div>
+          <div class="mod-name">Diccionario</div>
+          <div class="mod-desc">Tus palabras</div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:.5rem">
+        <div class="section-title">Canciones populares</div>
+        <button class="section-link" onclick="goToTab('songs')">Ver todas →</button>
+      </div>
+      <div class="songs-scroll" id="home-songs-list"></div>
+      <div style="padding:.75rem 1.25rem;text-align:center;color:var(--muted);font-size:11px;margin-top:.5rem;">
+        Fundación Daniel Ospina Rojas · Educación y Desarrollo Social
+      </div>
+    </div>
+
+    <!-- CANCIONES -->
+    <div id="tab-songs" class="hidden">
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" id="song-search" type="text" placeholder="Buscar canción o artista…" oninput="filterSongs()">
+        </div>
+      </div>
+      <div class="songs-grid" id="songs-grid"></div>
+    </div>
+
+    <!-- DICCIONARIO -->
+    <div id="tab-dictionary" class="hidden">
+      <div style="padding:1rem 1.25rem .5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+          <div class="section-title">Mi diccionario</div>
+          <div class="dict-count-chip" id="dict-count">0 palabras</div>
+        </div>
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" id="dict-search" type="text" placeholder="Buscar palabra…" oninput="filterWords()">
+        </div>
+      </div>
+      <div class="word-list" id="word-list">
+        <div class="dict-empty">🦫 Aún no has aprendido palabras.<br>Juega el módulo <strong>Completar</strong> para empezar.</div>
+      </div>
+    </div>
+
+    <!-- PROGRESO -->
+    <div id="tab-progress" class="hidden">
+      <div class="progress-screen">
+        <div class="prog-card">
+          <div class="prog-card-title">Nivel actual</div>
+          <div class="ring-wrap">
+            <svg viewBox="0 0 110 110" width="110" height="110">
+              <circle class="ring-bg" cx="55" cy="55" r="48"/>
+              <circle class="ring-fill" id="ring-circle" cx="55" cy="55" r="48" stroke-dasharray="301.6" stroke-dashoffset="301.6"/>
+            </svg>
+            <div class="ring-text"><div class="ring-level" id="ring-level">1</div><div class="ring-lbl">nivel</div></div>
+          </div>
+          <div style="font-size:13px;color:var(--muted);text-align:center;" id="prog-ring-label">0 de 7 canciones para nivel 2</div>
+        </div>
+        <div class="prog-card">
+          <div class="prog-card-title">Resumen</div>
+          <div class="stats-grid">
+            <div class="mini-stat"><div class="num" id="pg-points">0</div><div class="lbl">Puntos totales</div></div>
+            <div class="mini-stat"><div class="num" id="pg-songs">0</div><div class="lbl">Canciones</div></div>
+            <div class="mini-stat"><div class="num" id="pg-words">0</div><div class="lbl">Palabras</div></div>
+            <div class="mini-stat"><div class="num" id="pg-streak">0🔥</div><div class="lbl">Mejor racha</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL -->
+    <div id="tab-profile" class="hidden">
+      <div class="profile-header">
+        <div class="profile-avatar-big" id="profile-avatar"></div>
+        <div class="profile-name-big" id="profile-name-big">—</div>
+        <div class="profile-sub">Estudiante FDOR</div>
+      </div>
+      <div class="profile-menu">
+        <div class="menu-item" onclick="goToTab('progress')">
+          <div class="menu-icon" style="background:var(--sky-light)">📊</div>
+          <div class="menu-text"><div class="menu-label">Mi progreso</div><div class="menu-sub">Estadísticas y nivel</div></div>
+          <div class="menu-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="menu-item" onclick="goToTab('dictionary')">
+          <div class="menu-icon" style="background:var(--yellow-light)">📖</div>
+          <div class="menu-text"><div class="menu-label">Diccionario personal</div><div class="menu-sub" id="menu-dict-sub">0 palabras guardadas</div></div>
+          <div class="menu-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="menu-item" onclick="resetProgress()">
+          <div class="menu-icon" style="background:#FFF3E0">🔄</div>
+          <div class="menu-text"><div class="menu-label">Reiniciar progreso</div><div class="menu-sub">Vuelve a nivel 1</div></div>
+          <div class="menu-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="menu-item danger" onclick="logout()">
+          <div class="menu-icon" style="background:var(--danger-pale)">🚪</div>
+          <div class="menu-text"><div class="menu-label">Cerrar sesión</div><div class="menu-sub">Cambiar de usuario</div></div>
+          <div class="menu-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scroll-area -->
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="goToTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Inicio
+    </button>
+    <button class="nav-btn" id="nav-songs" onclick="goToTab('songs')">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Canciones
+    </button>
+    <button class="nav-btn" id="nav-dictionary" onclick="goToTab('dictionary')">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Diccionario
+    </button>
+    <button class="nav-btn" id="nav-progress" onclick="goToTab('progress')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Progreso
+    </button>
+    <button class="nav-btn" id="nav-profile" onclick="goToTab('profile')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil
+    </button>
+  </nav>
+</div>
+
+<!-- PLAYER -->
+<div id="screen-player" class="screen">
+  <div class="player-back-bar">
+    <button class="back-btn" onclick="closePlayer()">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>Volver
+    </button>
+    <div>
+      <div class="player-song-title" id="player-title"></div>
+      <div class="player-song-artist" id="player-artist"></div>
+    </div>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <div class="score-val" id="player-pts">0</div><div class="score-lbl">pts</div>
+    </div>
+    <div class="score-item">
+      <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 5-4 9-9 9s-9-4-9-9 4-9 9-9c2.1 0 4 .7 5.5 1.9"/></svg>
+      <div class="score-val" id="player-correct">0</div><div class="score-lbl">aciertos</div>
+    </div>
+    <div class="streak-badge" id="player-streak">0🔥</div>
+  </div>
+
+  <div class="yt-container"><div id="yt-player"></div></div>
+
+  <div class="module-tabs">
+    <button class="mod-tab active" id="tab-fill" onclick="switchModule('fill')">🧩 Completar</button>
+    <button class="mod-tab" id="tab-listen" onclick="switchModule('listen')">👂 Solo escuchar</button>
+  </div>
+
+  <div class="lyrics-panel" id="lyrics-panel"></div>
+
+  <div class="feedback-toast" id="feedback-toast"></div>
+
+  <div id="options-panel" class="options-panel">
+    <div class="options-prompt" id="options-prompt">¿Cuál es la palabra que falta?</div>
+    <div class="options-grid" id="options-grid"></div>
+  </div>
+
+  <div class="player-controls-bar">
+    <div class="time-track">
+      <span class="time-label" id="time-cur">0:00</span>
+      <div class="track-bar" id="track-bar" onclick="seekBar(event)">
+        <div class="track-fill" id="track-fill" style="width:0%"></div>
+      </div>
+      <span class="time-label" id="time-tot">0:00</span>
+    </div>
+    <div class="ctrl-buttons">
+      <button class="ctrl-btn" onclick="seekRel(-10)" title="−10s">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="seekRel(-5)" title="−5s">
+        <svg viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+      </button>
+      <button class="ctrl-btn main" id="playpause-btn" onclick="togglePlay()">
+        <svg id="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+        <svg id="icon-pause" viewBox="0 0 24 24" class="hidden"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="ctrl-btn" onclick="seekRel(5)" title="+5s">
+        <svg viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+      </button>
+      <button class="ctrl-btn" id="repeat-btn" onclick="toggleRepeat()" title="Repetir fragmento">
+        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FINISH OVERLAY -->
+<div class="overlay" id="finish-ov">
+  <div class="ov-emoji">🎉</div>
+  <div class="ov-title">¡Canción completada!</div>
+  <div class="ov-sub" id="fin-sub">Excelente trabajo.</div>
+  <div class="ov-stats">
+    <div class="ov-stat"><div class="num" id="fin-pts">0</div><div class="lbl">Puntos</div></div>
+    <div class="ov-stat"><div class="num" id="fin-ok">0</div><div class="lbl">Aciertos</div></div>
+    <div class="ov-stat"><div class="num" id="fin-words">0</div><div class="lbl">Palabras nuevas</div></div>
+  </div>
+  <div class="ov-actions">
+    <button class="btn-primary" onclick="replaySong()">🔁 Repetir canción</button>
+    <button class="btn-secondary" onclick="closePlayer()">← Elegir otra canción</button>
+  </div>
+</div>
+
+<!-- LEVEL UP OVERLAY -->
+<div class="overlay" id="levelup-ov">
+  <div class="levelup-stars">⭐</div>
+  <div class="levelup-title">¡Subiste de nivel!</div>
+  <div class="ov-sub" id="levelup-sub">Ahora estás en nivel 2</div>
+  <div class="ov-sub" id="levelup-desc" style="font-size:13px;margin-bottom:2rem;"></div>
+  <button class="btn-primary" onclick="document.getElementById('levelup-ov').classList.remove('show')" style="max-width:260px;">¡Continuar! 🚀</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+var tag=document.createElement('script');
+tag.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+</script>
+
+<script>
+/* ============================================================
+   BASE DE DATOS DE CANCIONES
+============================================================ */
+const SONGS = [
+  {
+    id:"shape-of-you", title:"Shape of You", artist:"Ed Sheeran",
+    ytId:"kLFMCCJEPFE", level:"basic", emoji:"🎸", color:"#1a2744", stars:3,
+    lyrics:[
+      {t:14, tx:"The club isn't the best place to find a lover",   b:[]},
+      {t:17, tx:"So the bar is where I go",                        b:[4]},
+      {t:20, tx:"Me and my friends at the table doing shots",      b:[6]},
+      {t:23, tx:"Drinking fast and then we talk slow",             b:[1]},
+      {t:27, tx:"Come over and start up a conversation with just me", b:[8]},
+      {t:31, tx:"And trust me I'll give it a chance now",          b:[7]},
+      {t:34, tx:"Take my hand stop put Van the Man on the jukebox",b:[2]},
+      {t:38, tx:"And then we start to dance",                      b:[5]},
+      {t:44, tx:"Girl you know I want your love",                  b:[4]},
+      {t:47, tx:"Your love was handmade for somebody like me",     b:[3]},
+      {t:50, tx:"Come on now follow my lead",                      b:[4]},
+      {t:53, tx:"I may be crazy don't mind me",                    b:[3]},
+      {t:57, tx:"Say boy let's not talk too much",                 b:[3]},
+      {t:60, tx:"Grab on my waist and put that body on me",        b:[2]},
+      {t:70, tx:"I'm in love with the shape of you",               b:[5]},
+      {t:73, tx:"We push and pull like a magnet do",               b:[4]},
+      {t:76, tx:"Although my heart is falling too",                b:[4]},
+      {t:79, tx:"I'm in love with your body",                      b:[4]},
+    ]
+  },
+  {
+    id:"counting-stars", title:"Counting Stars", artist:"OneRepublic",
+    ytId:"fWNaR-rxAic", level:"intermediate", emoji:"⭐", color:"#1B5E20", stars:4,
+    lyrics:[
+      {t:7,  tx:"Lately I been I been losing sleep",               b:[6]},
+      {t:10, tx:"Dreaming about the things that we could be",      b:[1]},
+      {t:13, tx:"But baby I been I been praying hard",             b:[5]},
+      {t:16, tx:"Said no more counting dollars we'll be counting stars", b:[3,7]},
+      {t:40, tx:"I see this life like a swinging vine",            b:[4]},
+      {t:43, tx:"Swing my heart across the line",                  b:[1]},
+      {t:52, tx:"Old but I'm not that old",                        b:[3]},
+      {t:55, tx:"Young but I'm not that bold",                     b:[3]},
+      {t:65, tx:"I feel something so right doing the wrong thing", b:[4]},
+      {t:68, tx:"I feel something so wrong doing the right thing", b:[4]},
+      {t:75, tx:"Everything that kills me makes me feel alive",    b:[7]},
+    ]
+  },
+  {
+    id:"someone-like-you", title:"Someone Like You", artist:"Adele",
+    ytId:"L8SKmJBWNS4", level:"intermediate", emoji:"💙", color:"#4A148C", stars:4,
+    lyrics:[
+      {t:26, tx:"I heard that you're settled down",                b:[4]},
+      {t:29, tx:"That you found a girl and you're married now",    b:[3]},
+      {t:33, tx:"I heard that your dreams came true",              b:[4]},
+      {t:41, tx:"Old friend why are you so shy",                   b:[5]},
+      {t:50, tx:"I hate to turn up out of the blue uninvited",     b:[8]},
+      {t:53, tx:"But I couldn't stay away I couldn't fight it",    b:[6]},
+      {t:57, tx:"I had hoped you'd see my face",                   b:[4]},
+      {t:67, tx:"Never mind I'll find someone like you",           b:[4]},
+      {t:71, tx:"I wish nothing but the best for you too",         b:[2]},
+      {t:75, tx:"Don't forget me I beg I remember you said",       b:[2]},
+      {t:79, tx:"Sometimes it lasts in love but sometimes it hurts instead", b:[3,9]},
+    ]
+  },
+  {
+    id:"blinding-lights", title:"Blinding Lights", artist:"The Weeknd",
+    ytId:"H5v3kku4y6Q", level:"advanced", emoji:"💡", color:"#B71C1C", stars:5,
+    lyrics:[
+      {t:22, tx:"I've been tryna call",                            b:[3]},
+      {t:25, tx:"I've been on my own for long enough",             b:[6]},
+      {t:28, tx:"Maybe you can show me how to love maybe",         b:[5]},
+      {t:32, tx:"I'm going through withdrawals",                   b:[3]},
+      {t:36, tx:"You don't even have to do too much",              b:[5]},
+      {t:44, tx:"I look around and Sin City's cold and empty",     b:[8]},
+      {t:51, tx:"I can't see clearly when you're gone",            b:[3]},
+      {t:56, tx:"I said ooh I'm blinded by the lights",            b:[4]},
+      {t:60, tx:"No I can't sleep until I feel your touch",        b:[7]},
+      {t:65, tx:"I said ooh I'm drowning in the night",            b:[4]},
+      {t:69, tx:"Oh when I'm like this you're the one I trust",    b:[8]},
+    ]
+  }
+];
+
+const DEFS = {
+  "go":{"es":"ir","def":"To move from one place to another.","ph":"So the bar is where I go"},
+  "shots":{"es":"tragos","def":"A small amount of strong alcoholic drink.","ph":"Me and my friends at the table doing shots"},
+  "fast":{"es":"rápido","def":"Moving quickly; with great speed.","ph":"Drinking fast and then we talk slow"},
+  "conversation":{"es":"conversación","def":"An informal talk between two or more people.","ph":"Start up a conversation with just me"},
+  "chance":{"es":"oportunidad","def":"A possibility of something happening.","ph":"I'll give it a chance now"},
+  "hand":{"es":"mano","def":"The end part of a person's arm.","ph":"Take my hand"},
+  "dance":{"es":"bailar","def":"To move rhythmically to music.","ph":"And then we start to dance"},
+  "love":{"es":"amor","def":"A strong feeling of deep affection.","ph":"Girl you know I want your love"},
+  "handmade":{"es":"hecho a mano","def":"Made by hand, not by machine.","ph":"Your love was handmade for somebody like me"},
+  "lead":{"es":"guiar","def":"To show the way by going in front.","ph":"Come on now follow my lead"},
+  "crazy":{"es":"loco","def":"Mentally unbalanced; very enthusiastic.","ph":"I may be crazy don't mind me"},
+  "waist":{"es":"cintura","def":"The narrow part between the ribs and hips.","ph":"Grab on my waist"},
+  "shape":{"es":"forma","def":"The outline or external form of something.","ph":"I'm in love with the shape of you"},
+  "magnet":{"es":"imán","def":"An object that attracts iron and steel.","ph":"We push and pull like a magnet do"},
+  "heart":{"es":"corazón","def":"The organ that pumps blood; symbol of love.","ph":"Although my heart is falling too"},
+  "sleep":{"es":"dormir","def":"A natural state of rest for the body.","ph":"Lately I been losing sleep"},
+  "dreaming":{"es":"soñando","def":"Experiencing dreams; imagining something desired.","ph":"Dreaming about the things that we could be"},
+  "praying":{"es":"rezando","def":"Speaking to God; hoping for something strongly.","ph":"I been praying hard"},
+  "counting":{"es":"contando","def":"Saying numbers in order; totaling things.","ph":"We'll be counting stars"},
+  "vine":{"es":"enredadera","def":"A climbing plant with long stems.","ph":"I see this life like a swinging vine"},
+  "swing":{"es":"balancear","def":"To move back and forth freely.","ph":"Swing my heart across the line"},
+  "bold":{"es":"audaz","def":"Showing confidence and bravery.","ph":"Young but I'm not that bold"},
+  "alive":{"es":"vivo","def":"Living; not dead; full of energy.","ph":"Everything that kills me makes me feel alive"},
+  "settled":{"es":"establecido","def":"Having made a permanent home somewhere.","ph":"I heard that you're settled down"},
+  "married":{"es":"casado","def":"Having a husband or wife; joined in marriage.","ph":"You found a girl and you're married now"},
+  "dreams":{"es":"sueños","def":"Cherished hopes or ambitions.","ph":"I heard that your dreams came true"},
+  "shy":{"es":"tímido","def":"Nervous or timid in the company of others.","ph":"Old friend why are you so shy"},
+  "uninvited":{"es":"sin invitación","def":"Arriving without being asked.","ph":"I hate to turn up uninvited"},
+  "fight":{"es":"luchar","def":"To struggle to resist something.","ph":"I couldn't fight it"},
+  "face":{"es":"cara","def":"The front part of a person's head.","ph":"I had hoped you'd see my face"},
+  "someone":{"es":"alguien","def":"An unknown or unspecified person.","ph":"I'll find someone like you"},
+  "wish":{"es":"desear","def":"To want or hope for something.","ph":"I wish nothing but the best for you"},
+  "forget":{"es":"olvidar","def":"To fail to remember.","ph":"Don't forget me"},
+  "lasts":{"es":"dura","def":"To continue for a period of time.","ph":"Sometimes it lasts in love"},
+  "hurts":{"es":"duele","def":"To cause pain or distress.","ph":"Sometimes it hurts instead"},
+  "tryna":{"es":"tratando de","def":"Informal for 'trying to'.","ph":"I've been tryna call"},
+  "withdrawals":{"es":"abstinencia","def":"Symptoms felt when stopping an addiction.","ph":"I'm going through withdrawals"},
+  "touch":{"es":"toque","def":"Physical contact; a light sensation.","ph":"Just a touch baby"},
+  "empty":{"es":"vacío","def":"Containing nothing; devoid of people.","ph":"Sin City's cold and empty"},
+  "clearly":{"es":"claramente","def":"In a clear and obvious way.","ph":"I can't see clearly when you're gone"},
+  "blinded":{"es":"cegado","def":"Unable to see; overwhelmed.","ph":"I'm blinded by the lights"},
+  "sleep2":{"es":"dormir","def":"To rest in a state of unconsciousness.","ph":"I can't sleep until I feel your touch"},
+  "drowning":{"es":"ahogándose","def":"Dying by suffocation in liquid; overwhelmed.","ph":"I'm drowning in the night"},
+  "trust":{"es":"confiar","def":"To believe in the reliability of someone.","ph":"You're the one I trust"},
+};
+
+/* ============================================================
+   ESTADO
+============================================================ */
+let userData = {name:'', level:1, points:0, songsCompleted:0, wordsLearned:[], bestStreak:0};
+let currentSong=null, currentModule='fill', pendingModule=null;
+let ytPlayer=null, ytReady=false;
+let isPlaying=false, isRepeat=false, repeatStart=0, repeatEnd=0;
+let sessionPts=0, sessionCorrect=0, sessionWords=[];
+let streak=0, currentLine=-1, pendingQ=null, waitingAnswer=false;
+let songDone=false, tickId=null;
+
+/* ============================================================
+   PERSISTENCIA localStorage
+============================================================ */
+function save(){ localStorage.setItem('fdor_v2', JSON.stringify(userData)); }
+function load(){
+  const d = localStorage.getItem('fdor_v2');
+  if(d) userData = {...userData, ...JSON.parse(d)};
+}
+
+/* ============================================================
+   INICIO
+============================================================ */
+window.onload = function(){
+  load();
+  setTimeout(()=>{
+    if(userData.name){
+      showScreen('app');
+      initApp();
+    } else {
+      showScreen('login');
+    }
+  }, 800);
+};
+
+function startApp(){
+  const nm = document.getElementById('login-name').value.trim();
+  userData.name = nm || 'Estudiante';
+  save();
+  showScreen('app');
+  initApp();
+}
+
+document.getElementById('login-name').addEventListener('keydown', e=>{ if(e.key==='Enter') startApp(); });
+
+function initApp(){
+  refreshUI();
+  renderSongsGrid();
+  renderHomeSongs();
+  renderDictionary();
+  goToTab('home');
+}
+
+function logout(){
+  if(!confirm('¿Salir y borrar sesión?')) return;
+  userData.name='';
+  save();
+  showScreen('login');
+  document.getElementById('login-name').value='';
+}
+
+function resetProgress(){
+  if(!confirm('¿Reiniciar todo el progreso? Esta acción no se puede deshacer.')) return;
+  userData = {name:userData.name, level:1, points:0, songsCompleted:0, wordsLearned:[], bestStreak:0};
+  save(); refreshUI(); renderDictionary();
+  showToast('✅ Progreso reiniciado');
+}
+
+/* ============================================================
+   UI
+============================================================ */
+function showScreen(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+}
+
+function goToTab(tab){
+  ['home','songs','dictionary','progress','profile'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.add('hidden');
+    const nb=document.getElementById('nav-'+t); if(nb) nb.classList.remove('active');
+  });
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+  const nb=document.getElementById('nav-'+tab); if(nb) nb.classList.add('active');
+  document.getElementById('main-scroll').scrollTop=0;
+  if(tab==='dictionary') renderDictionary();
+  if(tab==='progress')   renderProgress();
+}
+
+function showToast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+function refreshUI(){
+  const nm=(userData.name||'Estudiante').split(' ')[0];
+  const init=(userData.name||'ES').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  document.getElementById('home-name').innerHTML=`¡Hola, <span>${nm}</span>! 👋`;
+  document.getElementById('home-points').textContent=userData.points;
+  document.getElementById('home-songs').textContent=userData.songsCompleted;
+  document.getElementById('home-streak').textContent=(userData.bestStreak||0)+'🔥';
+  document.getElementById('header-level').textContent='Nivel '+userData.level;
+  document.getElementById('header-avatar').textContent=init;
+  document.getElementById('profile-avatar').textContent=init;
+  document.getElementById('profile-name-big').textContent=userData.name||'Estudiante';
+  const wc=(userData.wordsLearned||[]).length;
+  document.getElementById('menu-dict-sub').textContent=wc+' palabras guardadas';
+  document.getElementById('dict-count').textContent=wc+' palabras';
+  const prg=userData.songsCompleted%7, pct=Math.round((prg/7)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-value').textContent=prg+'/7';
+  document.getElementById('prog-label').textContent='Progreso al nivel '+(userData.level+1);
+}
+
+/* ============================================================
+   CANCIONES
+============================================================ */
+function lvlLabel(l){return{basic:'Básico',intermediate:'Intermedio',advanced:'Avanzado'}[l]||l;}
+function lvlClass(l){return{basic:'lvl-basic',intermediate:'lvl-mid',advanced:'lvl-adv'}[l]||'lvl-basic';}
+function stars(n){return'★'.repeat(n)+'☆'.repeat(5-n);}
+
+function renderSongsGrid(){
+  document.getElementById('songs-grid').innerHTML=SONGS.map((s,i)=>`
+    <div class="song-card ${i===0?'featured':''}" onclick="openSong('${s.id}')">
+      <div class="song-thumb" style="background:linear-gradient(135deg,${s.color},${s.color}bb)">
+        <span>${s.emoji}</span>
+        <div class="play-overlay"><div class="play-circle">
+          <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+        </div></div>
+      </div>
+      <div class="song-name">${s.title}</div>
+      <div class="song-artist-name">${s.artist}</div>
+      <div class="song-meta-row">
+        <span class="lvl-pill ${lvlClass(s.level)}">${lvlLabel(s.level)}</span>
+        <span class="song-stars">${stars(s.stars)}</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderHomeSongs(){
+  document.getElementById('home-songs-list').innerHTML=SONGS.map((s,i)=>`
+    <div class="song-mini-card ${i===0?'featured':''}" onclick="openSong('${s.id}')">
+      <div class="song-thumb-mini" style="background:linear-gradient(135deg,${s.color},${s.color}bb)">
+        <span>${s.emoji}</span>${i===0?'<div class="mini-badge">⭐ Popular</div>':''}
+      </div>
+      <div class="song-mini-title">${s.title}</div>
+      <div class="song-mini-artist">${s.artist}</div>
+    </div>`).join('');
+}
+
+function filterSongs(){
+  const q=document.getElementById('song-search').value.toLowerCase();
+  document.querySelectorAll('#songs-grid .song-card').forEach((c,i)=>{
+    const s=SONGS[i];
+    c.style.display=(s.title.toLowerCase().includes(q)||s.artist.toLowerCase().includes(q))?'':'none';
+  });
+}
+
+/* ============================================================
+   ABRIR REPRODUCTOR
+============================================================ */
+function openSong(id){
+  currentSong=SONGS.find(s=>s.id===id);
+  sessionPts=0; sessionCorrect=0; sessionWords=[];
+  streak=0; currentLine=-1; pendingQ=null;
+  waitingAnswer=false; songDone=false;
+  currentModule=pendingModule||'fill'; pendingModule=null;
+
+  document.getElementById('player-title').textContent=currentSong.title;
+  document.getElementById('player-artist').textContent=currentSong.artist;
+  updateScoreBar(); renderModuleTabs();
+  buildLyrics(); hideOptions();
+  showScreen('player');
+
+  if(ytReady){
+    if(ytPlayer){ ytPlayer.loadVideoById(currentSong.ytId); }
+    else createPlayer();
+  }
+  startTick();
+}
+
+function closePlayer(){
+  stopTick();
+  try{ if(ytPlayer) ytPlayer.pauseVideo(); }catch(e){}
+  document.getElementById('finish-ov').classList.remove('show');
+  showScreen('app'); goToTab('songs');
+}
+
+function replaySong(){
+  document.getElementById('finish-ov').classList.remove('show');
+  openSong(currentSong.id);
+}
+
+/* ============================================================
+   YOUTUBE
+============================================================ */
+function onYouTubeIframeAPIReady(){
+  ytReady=true;
+  if(currentSong) createPlayer();
+}
+
+function createPlayer(){
+  ytPlayer=new YT.Player('yt-player',{
+    videoId:currentSong.ytId,
+    playerVars:{rel:0,modestbranding:1,autoplay:1,playsinline:1,enablejsapi:1},
+    events:{
+      onReady:()=>{ isPlaying=true; updatePlayBtn(); },
+      onStateChange:(e)=>{
+        isPlaying=(e.data===YT.PlayerState.PLAYING);
+        if(e.data===YT.PlayerState.ENDED) onSongEnd();
+        updatePlayBtn();
+      },
+      onError:(e)=>{
+        const msgs={2:'ID de video inválido.',5:'Error del reproductor HTML5.',100:'Video no encontrado o eliminado.',101:'El dueño del video no permite reproducción externa.',150:'El dueño del video no permite reproducción externa.'};
+        const msg=msgs[e.data]||'Error al cargar el video (código '+e.data+').';
+        document.getElementById('yt-player').innerHTML=`
+          <div style="position:absolute;inset:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1rem;text-align:center;">
+            <div style="font-size:40px;">⚠️</div>
+            <div style="color:#fff;font-size:14px;font-weight:600;">${msg}</div>
+            <div style="color:rgba(255,255,255,.5);font-size:12px;">Prueba abrir el archivo desde tu equipo<br>o usa Chrome/Edge actualizado.</div>
+            <a href="https://youtube.com/watch?v=${currentSong.ytId}" target="_blank"
+               style="background:var(--yellow);color:var(--navy);padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-top:4px;">
+              Ver en YouTube ↗
+            </a>
+          </div>`;
+      }
+    }
+  });
+}
+
+function togglePlay(){
+  if(!ytPlayer) return;
+  if(isPlaying){ ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+}
+
+function updatePlayBtn(){
+  document.getElementById('icon-play').classList.toggle('hidden',isPlaying);
+  document.getElementById('icon-pause').classList.toggle('hidden',!isPlaying);
+}
+
+function seekRel(s){ if(ytPlayer) ytPlayer.seekTo(Math.max(0,ytPlayer.getCurrentTime()+s),true); }
+
+function seekBar(e){
+  if(!ytPlayer) return;
+  const r=e.currentTarget.getBoundingClientRect();
+  ytPlayer.seekTo(((e.clientX-r.left)/r.width)*(ytPlayer.getDuration()||1),true);
+}
+
+function toggleRepeat(){
+  if(!ytPlayer) return;
+  isRepeat=!isRepeat;
+  document.getElementById('repeat-btn').classList.toggle('repeat-on',isRepeat);
+  if(isRepeat){
+    const t=ytPlayer.getCurrentTime();
+    repeatStart=Math.max(0,t-4); repeatEnd=t+12;
+    showToast('🔁 Repitiendo este fragmento');
+  } else { showToast('Repetición desactivada'); }
+}
+
+/* ============================================================
+   TICK — sincronización de letras
+============================================================ */
+function startTick(){ stopTick(); tickId=setInterval(tick,300); }
+function stopTick(){ if(tickId){ clearInterval(tickId); tickId=null; } }
+
+function tick(){
+  if(!ytPlayer||!currentSong) return;
+  let t=0; try{ t=ytPlayer.getCurrentTime()||0; }catch(e){ return; }
+  const dur=ytPlayer.getDuration()||1;
+
+  // UI tiempo
+  document.getElementById('track-fill').style.width=((t/dur)*100)+'%';
+  document.getElementById('time-cur').textContent=fmt(t);
+  document.getElementById('time-tot').textContent=fmt(dur);
+
+  // Repetir fragmento
+  if(isRepeat && t>=repeatEnd){ ytPlayer.seekTo(repeatStart,true); return; }
+
+  // Línea activa
+  const L=currentSong.lyrics; let ai=-1;
+  for(let i=0;i<L.length;i++){ if(t>=L[i].t) ai=i; else break; }
+
+  if(ai!==currentLine){
+    currentLine=ai;
+    highlightLine(ai);
+    waitingAnswer=false;
+    if(currentModule==='fill' && ai>=0 && L[ai].b && L[ai].b.length>0){
+      triggerQ(ai, L[ai]);
+    }
+  }
+}
+
+function fmt(s){ const m=Math.floor(s/60),ss=Math.floor(s%60); return m+':'+(ss<10?'0':'')+ss; }
+
+/* ============================================================
+   LETRAS
+============================================================ */
+function buildLyrics(){
+  const panel=document.getElementById('lyrics-panel');
+  if(!currentSong){ panel.innerHTML=''; return; }
+  panel.innerHTML=currentSong.lyrics.map((line,i)=>{
+    const words=line.tx.split(' ');
+    const html=words.map((w,wi)=>{
+      if(line.b.includes(wi)) return `<span class="lyric-blank" data-l="${i}" data-w="${wi}"></span>`;
+      return `<span>${w} </span>`;
+    }).join('');
+    return `<div class="lyric-line" id="ll-${i}">${html}</div>`;
+  }).join('');
+}
+
+function highlightLine(i){
+  document.querySelectorAll('.lyric-line').forEach(e=>e.classList.remove('active'));
+  if(i<0) return;
+  const el=document.getElementById('ll-'+i);
+  if(el){ el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+
+function revealBlank(li,wi,word,ok){
+  const el=document.querySelector(`.lyric-blank[data-l="${li}"][data-w="${wi}"]`);
+  if(!el) return;
+  el.textContent=word;
+  el.style.color=ok?'var(--yellow)':'var(--danger)';
+  el.style.borderColor=ok?'rgba(255,193,7,.6)':'rgba(198,40,40,.6)';
+  el.style.background=ok?'rgba(255,193,7,.1)':'rgba(198,40,40,.1)';
+}
+
+/* ============================================================
+   MÓDULO 1 — COMPLETAR
+============================================================ */
+function triggerQ(li, line){
+  if(waitingAnswer) return;
+  const words=line.tx.split(' ');
+  const wi=line.b[0];
+  const correct=words[wi];
+
+  // Distractores de otras líneas
+  const pool=[];
+  currentSong.lyrics.forEach(l=>{
+    (l.b||[]).forEach(bi=>{
+      const w=l.tx.split(' ')[bi];
+      if(w && w!==correct && !pool.includes(w)) pool.push(w);
+    });
+  });
+  const extra=['night','heart','world','song','love','time','life','light'];
+  extra.forEach(w=>{ if(!pool.includes(w)) pool.push(w); });
+  const distractors=shuffle([...pool]).slice(0,3);
+  const opts=shuffle([correct,...distractors]);
+
+  pendingQ={li,wi,correct};
+  waitingAnswer=true;
+  showOptions(opts,correct);
+  try{ ytPlayer.pauseVideo(); }catch(e){}
+}
+
+function showOptions(opts,correct){
+  const panel=document.getElementById('options-panel');
+  panel.classList.remove('hidden');
+  document.getElementById('options-prompt').textContent='¿Cuál es la palabra que falta?';
+  document.getElementById('options-grid').innerHTML=opts.map((o,i)=>`
+    <button class="opt-btn" onclick="answer('${o}','${correct}',this)">
+      ${'ABCD'[i]}. ${o}
+    </button>`).join('');
+}
+
+function hideOptions(){
+  document.getElementById('options-panel').classList.add('hidden');
+  document.getElementById('options-grid').innerHTML='';
+}
+
+function answer(chosen, correct, btn){
+  if(!pendingQ || !waitingAnswer) return;
+  const {li,wi} = pendingQ;
+  const ok = chosen===correct;
+
+  document.querySelectorAll('.opt-btn').forEach(b=>{ b.disabled=true; });
+  btn.classList.add(ok?'correct':'wrong');
+  if(!ok){
+    document.querySelectorAll('.opt-btn').forEach(b=>{
+      if(b.textContent.trim().slice(3).trim()===correct) b.classList.add('correct');
+    });
+  }
+
+  revealBlank(li,wi,correct,ok);
+  pendingQ=null; waitingAnswer=false;
+
+  if(ok){
+    streak++;
+    const pts=streak>=5?10:5;
+    sessionPts+=pts; sessionCorrect++;
+    if(streak>(userData.bestStreak||0)) userData.bestStreak=streak;
+    if(!userData.wordsLearned.includes(correct)){
+      userData.wordsLearned.push(correct);
+      if(!sessionWords.includes(correct)) sessionWords.push(correct);
+    }
+    feedback(true,`+${pts} pts · Racha: ${streak}🔥`);
+  } else {
+    streak=0;
+    feedback(false,`La palabra correcta era: "${correct}"`);
+  }
+
+  updateScoreBar();
+  save();
+
+  setTimeout(()=>{
+    clearFeedback(); hideOptions();
+    try{ ytPlayer.playVideo(); }catch(e){}
+  },1800);
+}
+
+function feedback(ok,msg){
+  const el=document.getElementById('feedback-toast');
+  el.textContent=(ok?'✅ ¡Correcto! ':'❌ ')+msg;
+  el.className='feedback-toast '+(ok?'ok':'err');
+}
+function clearFeedback(){ document.getElementById('feedback-toast').className='feedback-toast'; }
+
+function updateScoreBar(){
+  document.getElementById('player-pts').textContent=userData.points+sessionPts;
+  document.getElementById('player-correct').textContent=sessionCorrect;
+  document.getElementById('player-streak').textContent=streak+'🔥';
+}
+
+/* ============================================================
+   MÓDULOS
+============================================================ */
+function switchModule(mod){
+  currentModule=mod;
+  renderModuleTabs();
+  if(mod==='listen'){ hideOptions(); clearFeedback(); waitingAnswer=false; }
+}
+function renderModuleTabs(){
+  document.getElementById('tab-fill').classList.toggle('active',currentModule==='fill');
+  document.getElementById('tab-listen').classList.toggle('active',currentModule==='listen');
+  document.getElementById('options-panel').classList.toggle('hidden',currentModule!=='fill');
+}
+
+/* ============================================================
+   FIN DE CANCIÓN
+============================================================ */
+function onSongEnd(){
+  if(songDone) return; songDone=true; stopTick();
+  userData.points+=sessionPts;
+  userData.songsCompleted++;
+  save();
+
+  const prevLvl=userData.level;
+  if(userData.songsCompleted>0 && userData.songsCompleted%7===0){
+    userData.level++; save();
+  }
+
+  document.getElementById('fin-pts').textContent=sessionPts;
+  document.getElementById('fin-ok').textContent=sessionCorrect;
+  document.getElementById('fin-words').textContent=sessionWords.length;
+  document.getElementById('fin-sub').textContent=
+    sessionCorrect>=6?'¡Excelente trabajo! Sigue así 💪':
+    sessionCorrect>=3?'¡Buen esfuerzo! Practica más 🎯':'Sigue practicando, vas mejorando 🌱';
+  document.getElementById('finish-ov').classList.add('show');
+
+  if(userData.level>prevLvl){
+    setTimeout(()=>{
+      document.getElementById('finish-ov').classList.remove('show');
+      document.getElementById('levelup-sub').textContent='Ahora estás en nivel '+userData.level;
+      document.getElementById('levelup-desc').textContent=
+        `A partir de ahora habrá más palabras ocultas y vocabulario más avanzado. ¡Sigue así!`;
+      document.getElementById('levelup-ov').classList.add('show');
+    },1200);
+  }
+  refreshUI(); renderDictionary();
+}
+
+/* ============================================================
+   DICCIONARIO
+============================================================ */
+function renderDictionary(){
+  const words=userData.wordsLearned||[];
+  document.getElementById('dict-count').textContent=words.length+' palabras';
+  document.getElementById('menu-dict-sub').textContent=words.length+' palabras guardadas';
+  const list=document.getElementById('word-list');
+  if(words.length===0){
+    list.innerHTML='<div class="dict-empty">🦫 Aún no has aprendido palabras.<br>Juega el módulo <strong>Completar</strong> para empezar.</div>';
+    return;
+  }
+  list.innerHTML=[...words].reverse().map(w=>{
+    const d=DEFS[w]||{es:'—',def:'Sigue practicando para ver la definición.',ph:''};
+    return `<div class="word-card">
+      <div class="word-card-top"><span class="word-en">${w}</span><span class="word-es">${d.es}</span></div>
+      <div class="word-def">${d.def}</div>
+      ${d.ph?`<div class="word-phrase">"${d.ph}"</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function filterWords(){
+  const q=document.getElementById('dict-search').value.toLowerCase();
+  document.querySelectorAll('#word-list .word-card').forEach(c=>{
+    const en=c.querySelector('.word-en')?.textContent||'';
+    const es=c.querySelector('.word-es')?.textContent||'';
+    c.style.display=(en.includes(q)||es.includes(q))?'':'none';
+  });
+}
+
+/* ============================================================
+   PROGRESO
+============================================================ */
+function renderProgress(){
+  const lvl=userData.level||1, prg=userData.songsCompleted%7;
+  const circ=2*Math.PI*48, off=circ*(1-(prg/7));
+  document.getElementById('ring-level').textContent=lvl;
+  document.getElementById('ring-circle').style.strokeDashoffset=off;
+  document.getElementById('prog-ring-label').textContent=prg+' de 7 canciones para nivel '+(lvl+1);
+  document.getElementById('pg-points').textContent=userData.points;
+  document.getElementById('pg-songs').textContent=userData.songsCompleted;
+  document.getElementById('pg-words').textContent=(userData.wordsLearned||[]).length;
+  document.getElementById('pg-streak').textContent=(userData.bestStreak||0)+'🔥';
+}
+
+/* ============================================================
+   UTIL
+============================================================ */
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
+</script>
+</body>
+</html>
