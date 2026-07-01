@@ -900,32 +900,46 @@ function onYouTubeIframeAPIReady(){
 }
 
 function createPlayer(){
-  ytPlayer=new YT.Player('yt-player',{
-    videoId:currentSong.ytId,
-    playerVars:{rel:0,modestbranding:1,autoplay:1,playsinline:1,enablejsapi:1},
+  ytPlayer = new YT.Player('yt-player',{
+    videoId: currentSong.ytId,
+
+    playerVars:{
+      rel:0,
+      modestbranding:1,
+      autoplay:1,
+      playsinline:1,
+      enablejsapi:1,
+      origin: window.location.origin
+    },
+
     events:{
-      onReady:()=>{ isPlaying=true; updatePlayBtn(); },
-      onStateChange:(e)=>{
-        isPlaying=(e.data===YT.PlayerState.PLAYING);
-        if(e.data===YT.PlayerState.ENDED) onSongEnd();
+      onReady:()=>{
+        isPlaying=true;
         updatePlayBtn();
       },
+
+      onStateChange:(e)=>{
+        isPlaying=(e.data===YT.PlayerState.PLAYING);
+
+        if(e.data===YT.PlayerState.ENDED){
+          onSongEnd();
+        }
+
+        updatePlayBtn();
+      },
+
       onError:(e)=>{
-        const msgs={2:'ID de video inválido.',5:'Error del reproductor HTML5.',100:'Video no encontrado o eliminado.',101:'El dueño del video no permite reproducción externa.',150:'El dueño del video no permite reproducción externa.'};
-        const msg=msgs[e.data]||'Error al cargar el video (código '+e.data+').';
-        document.getElementById('yt-player').innerHTML=`
-          <div style="position:absolute;inset:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:1rem;text-align:center;">
-            <div style="font-size:40px;">⚠️</div>
-            <div style="color:#fff;font-size:14px;font-weight:600;">${msg}</div>
-            <div style="color:rgba(255,255,255,.5);font-size:12px;">Prueba abrir el archivo desde tu equipo<br>o usa Chrome/Edge actualizado.</div>
-            <a href="https://youtube.com/watch?v=${currentSong.ytId}" target="_blank"
-               style="background:var(--yellow);color:var(--navy);padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin-top:4px;">
-              Ver en YouTube ↗
-            </a>
-          </div>`;
+        handleVideoError(e.data);
       }
     }
   });
+
+  // fallback si no arranca
+  setTimeout(()=>{
+    if(!isPlaying){
+      handleVideoError(101);
+    }
+  },4000);
 }
 
 function togglePlay(){
