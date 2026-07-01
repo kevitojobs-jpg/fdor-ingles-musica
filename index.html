@@ -942,10 +942,65 @@ function createPlayer(){
   },4000);
 }
 
-function togglePlay(){
-  if(!ytPlayer) return;
-  if(isPlaying){ ytPlayer.pauseVideo(); } else { ytPlayer.playVideo(); }
+
+function handleVideoError(code){
+
+  const msgs = {
+    2:"ID inválido",
+    5:"Error del reproductor",
+    100:"Video no disponible",
+    101:"Bloqueado por YouTube",
+    150:"Video restringido"
+  };
+
+  const msg = msgs[code] || "Error de reproducción";
+
+  const container = document.getElementById('yt-player');
+
+  container.innerHTML = `
+    <div style="
+      position:absolute;
+      inset:0;
+      background:#111;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      text-align:center;
+      color:white;
+    ">
+      <div style="font-size:40px;">⚠️</div>
+      <div>${msg}</div>
+
+      <button onclick="openVideoExtern()"
+        style="
+          background:#FFC107;
+          border:none;
+          padding:8px 16px;
+          border-radius:6px;
+          font-weight:600;
+          cursor:pointer;
+        ">
+        Ver en YouTube
+      </button>
+    </div>
+  `;
+
+  setTimeout(()=>{
+    openVideoExtern();
+  },1500);
 }
+
+function openVideoExtern(){
+  if(!currentSong) return;
+  window.open(`https://www.youtube.com/watch?v=${currentSong.ytId}`, '_blank');
+
+}
+
+function togglePlay(){
+``
+
 
 function updatePlayBtn(){
   document.getElementById('icon-play').classList.toggle('hidden',isPlaying);
